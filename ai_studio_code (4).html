@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debabrata | Creative Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        :root {
+            --bg-color: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.2);
+            --accent-1: #ff0055; /* Neon Pink */
+            --accent-2: #00ddff; /* Neon Cyan */
+            --accent-3: #8800ff; /* Neon Purple */
+            --text-main: #ffffff;
+            --text-muted: #a1a1aa;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- BACKGROUND EFFECTS --- */
+        .liquid-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden; background: #000; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.6; animation: move-blob 20s infinite alternate; }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--accent-3); animation-duration: 25s; }
+        .blob-2 { bottom: -10%; right: -10%; width: 60vw; height: 60vw; background: var(--accent-2); animation-duration: 30s; animation-direction: alternate-reverse; }
+        .blob-3 { top: 40%; left: 40%; width: 40vw; height: 40vw; background: var(--accent-1); animation-duration: 22s; }
+        @keyframes move-blob { 0% { transform: translate(0, 0) scale(1); } 33% { transform: translate(30px, -50px) scale(1.1); } 66% { transform: translate(-20px, 20px) scale(0.9); } 100% { transform: translate(0, 0) scale(1); } }
+        
+        .noise { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; opacity: 0.05; background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+
+        /* --- MAIN CONTAINER --- */
+        .main-container {
+            position: relative;
+            z-index: 10;
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: box-shadow 0.3s ease;
+        }
+
+        /* --- HEADER & SCROLLABLE TABS --- */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--glass-border);
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            white-space: nowrap;
+            background: linear-gradient(to right, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .tabs-container {
+            position: relative;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50px;
+            padding: 5px;
+            max-width: 600px; 
+            overflow: hidden;
+        }
+
+        .tabs {
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch; 
+        }
+        .tabs::-webkit-scrollbar { display: none; }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px 24px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            z-index: 2;
+            transition: color 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .tab-btn.active { color: #fff; }
+
+        .tab-highlighter {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: var(--glass-highlight);
+            border-radius: 40px;
+            z-index: 1;
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            pointer-events: none;
+        }
+
+        /* --- CONTENT AREA --- */
+        .content-area {
+            flex: 1;
+            position: relative;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        .content-area::-webkit-scrollbar { width: 6px; }
+        .content-area::-webkit-scrollbar-track { background: transparent; }
+        .content-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        .section { display: none; padding: 60px 80px; animation: fadeIn 0.5s ease forwards; }
+        .section.active-section { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HOME & TYPING EFFECT STYLES --- */
+        h1 { font-size: 5rem; line-height: 1.1; margin-bottom: 0px; background: linear-gradient(135deg, #fff 0%, #b8b8b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        .typing-container {
+            font-size: 3rem;
+            font-weight: 600;
+            margin-top: 10px;
+            margin-bottom: 30px;
+            min-height: 60px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .static-text { color: var(--text-muted); }
+
+        /* --- LIQUID GLASS TEXT EFFECT --- */
+        .neon-text { 
+            font-weight: 800;
+            position: relative;
+            
+            /* Define CSS Variable fallback */
+            --target-color: #fff;
+            
+            /* Gradient Stack for Glass Effect:
+               1. A mix of the target color, white highlights, and transparency 
+            */
+            background-image: linear-gradient(
+                110deg,
+                var(--target-color) 10%,
+                rgba(255,255,255, 0.9) 25%, 
+                var(--target-color) 35%,
+                var(--target-color) 60%,
+                rgba(255,255,255, 0.9) 75%,
+                var(--target-color) 90%
+            );
+            background-size: 200% auto;
+            
+            /* Clip the background to the text shape */
+            -webkit-background-clip: text;
+            background-clip: text;
+            
+            /* Make text transparent to show gradient */
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            
+            /* Animate the gradient to create flow */
+            animation: liquidFlow 4s linear infinite;
+
+            /* DEPTH STACK */
+            /* 1. Subtle stroke for glass edge definition */
+            -webkit-text-stroke: 1px rgba(255,255,255,0.15);
+            
+            /* 2. Drop Shadows:
+               - First shadow: Crisp white/light highlight on top-left (bevel effect)
+               - Second shadow: Soft dark shadow on bottom-right (distance)
+            */
+            filter: 
+                drop-shadow(-1px -1px 0px rgba(255,255,255,0.3)) 
+                drop-shadow(3px 3px 6px rgba(0,0,0,0.6));
+        }
+
+        @keyframes liquidFlow {
+            to { background-position: 200% center; }
+        }
+        
+        .cursor-blink {
+            display: inline-block;
+            width: 3px;
+            height: 50px;
+            background-color: #fff;
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+        p.hero-sub { font-size: 1.2rem; color: var(--text-muted); max-width: 600px; margin-bottom: 40px; line-height: 1.6; }
+        
+        .cta-btn {
+            display: inline-block; padding: 15px 35px; background: linear-gradient(90deg, var(--accent-3), var(--accent-1));
+            color: white; text-decoration: none; border-radius: 30px; font-weight: 600; box-shadow: 0 10px 20px rgba(255, 0, 85, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s; border: none; cursor: pointer;
+        }
+        .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(255, 0, 85, 0.4); }
+
+        /* --- PORTFOLIO & GENERAL --- */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; margin-top: 30px; }
+        .card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); border-radius: 16px; overflow: hidden; transition: transform 0.3s ease, border-color 0.3s ease; position: relative; height: 300px; cursor: pointer; }
+        .card:hover { transform: translateY(-5px); border-color: var(--glass-highlight); }
+        .card-img { width: 100%; height: 70%; background-size: cover; background-position: center; transition: transform 0.5s ease; }
+        .card:hover .card-img { transform: scale(1.05); }
+        .card-info { padding: 15px; height: 30%; display: flex; flex-direction: column; justify-content: center; background: rgba(0,0,0,0.2); backdrop-filter: blur(5px); }
+
+        /* --- SOCIAL GRID --- */
+        .contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
+        .social-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .social-btn { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 12px; text-decoration: none; color: white; font-weight: 600; transition: all 0.3s ease; }
+        .social-btn svg { width: 20px; height: 20px; fill: white; transition: fill 0.3s; }
+        .social-btn:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.3); }
+        .social-btn.insta:hover { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); border: none; }
+        .social-btn.fb:hover { background: #1877F2; border-color: #1877F2; }
+        .social-btn.tg:hover { background: #0088cc; border-color: #0088cc; }
+        .social-btn.mail:hover { background: var(--accent-1); border-color: var(--accent-1); }
+
+        .form-group { margin-bottom: 20px; }
+        input, textarea { width: 100%; padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 8px; color: white; outline: none; transition: border-color 0.3s; font-family: inherit; }
+        input:focus, textarea:focus { border-color: var(--accent-2); }
+
+        .cursor-glow { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); mix-blend-mode: overlay; }
+
+        @media (max-width: 768px) {
+            .main-container { width: 100%; height: 100vh; border-radius: 0; border: none; }
+            h1 { font-size: 3rem; }
+            .typing-container { font-size: 1.5rem; min-height: 40px; }
+            .cursor-blink { height: 25px; }
+            .section { padding: 40px 20px; }
+            .nav-header { padding: 15px 20px; flex-direction: column; align-items: flex-start; gap: 15px; }
+            .tabs-container { width: 100%; max-width: 100%; border-radius: 12px; }
+            .tabs { padding-right: 20px; }
+            .contact-layout { grid-template-columns: 1fr; gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+    <div class="noise"></div>
+    <div class="cursor-glow" id="cursor"></div>
+
+    <div class="main-container">
+        
+        <nav class="nav-header">
+            <div class="logo">DEBABRATA.</div>
+            <div class="tabs-container">
+                <div class="tabs">
+                    <div class="tab-highlighter" id="highlighter"></div>
+                    <button class="tab-btn active" data-target="home">Home</button>
+                    <button class="tab-btn" data-target="portfolio">Work</button>
+                    <button class="tab-btn" data-target="services">Services</button>
+                    <button class="tab-btn" data-target="contact">Contact</button>
+                </div>
+            </div>
+        </nav>
+
+        <div class="content-area">
+            
+            <!-- HOME SECTION -->
+            <section id="home" class="section active-section">
+                <!-- Static Name -->
+                <h1>I'm Debabrata</h1>
+                
+                <!-- Dynamic Typing Effect -->
+                <div class="typing-container">
+                    <span class="static-text">I do </span>
+                    <span id="typing-text" class="neon-text"></span>
+                    <span class="cursor-blink"></span>
+                </div>
+
+                <p class="hero-sub">
+                    Welcome to my creative space. I blend artistic intuition with technical precision to create visual identities that don't just stand out—they flow.
+                </p>
+                
+                <button class="cta-btn" onclick="switchTab('portfolio')">View Projects</button>
+            </section>
+
+            <!-- PORTFOLIO -->
+            <section id="portfolio" class="section">
+                <h2>Selected Work</h2>
+                <div class="portfolio-grid">
+                    <div class="card">
+                        <div class="card-img" style="background-image: url('assets/projects/project1.jpg'); background-color: #222;"></div> 
+                        <div class="card-info"><h3>Project Alpha</h3><span>Brand Identity</span></div>
+                    </div>
+                    <div class="card">
+                        <div class="card-img" style="background: linear-gradient(45deg, #00ddff, #000);"></div>
+                        <div class="card-info"><h3>Aqua Flow</h3><span>UI Design</span></div>
+                    </div>
+                     <div class="card">
+                        <div class="card-img" style="background: linear-gradient(45deg, #8800ff, #000);"></div>
+                        <div class="card-info"><h3>Cyber Punk</h3><span>Motion</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SERVICES -->
+            <section id="services" class="section">
+                <h2>Services</h2>
+                <div style="margin-top:20px; display:grid; gap:20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:12px;"><h3>Graphic Design</h3><p style="color:var(--text-muted)">Logos, Branding & Print</p></div>
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:12px;"><h3>Video Editing</h3><p style="color:var(--text-muted)">Cinematic Cuts & Motion</p></div>
+                    <div style="padding:20px; background:rgba(255,255,255,0.05); border-radius:12px;"><h3>Photography</h3><p style="color:var(--text-muted)">Portraits & Product</p></div>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section id="contact" class="section">
+                <div class="contact-layout">
+                    <div>
+                        <h2 style="font-size: 3rem; margin-bottom: 20px;">Let's Talk.</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 30px;">Connect with me on social media or send a direct message.</p>
+                        
+                        <div class="social-grid">
+                            <a href="https://instagram.com" target="_blank" class="social-btn insta">
+                                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                                <span>Instagram</span>
+                            </a>
+                            <a href="https://facebook.com" target="_blank" class="social-btn fb">
+                                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                <span>Facebook</span>
+                            </a>
+                            <a href="https://telegram.org" target="_blank" class="social-btn tg">
+                                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                <span>Telegram</span>
+                            </a>
+                            <a href="mailto:hello@aura.com" class="social-btn mail">
+                                <svg viewBox="0 0 24 24"><path d="M0 3v18h24v-18h-24zm6.623 7.929l-6.623 5.772v-11.547l6.623 5.775zm2.262 1.233l3.115 2.716 3.114-2.716 6.143 5.338h-18.514l6.142-5.338zm9.735-1.234l6.624-5.775v11.547l-6.624-5.772zm-12.004-6.428h17.384l-8.692 7.579-8.692-7.579z"/></svg>
+                                <span>Email</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <form onsubmit="event.preventDefault(); alert('Sent!');">
+                        <div class="form-group"><input type="text" placeholder="Your Name"></div>
+                        <div class="form-group"><input type="email" placeholder="Your Email"></div>
+                        <div class="form-group"><textarea rows="5" placeholder="Tell us about your project..."></textarea></div>
+                        <button class="cta-btn" style="width:100%">Send Message</button>
+                    </form>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        // --- TABS LOGIC ---
+        const tabsContainer = document.querySelector('.tabs');
+        const tabs = document.querySelectorAll('.tab-btn');
+        const sections = document.querySelectorAll('.section');
+        const highlighter = document.getElementById('highlighter');
+
+        function updateHighlighter(activeTab) {
+            const left = activeTab.offsetLeft;
+            const width = activeTab.offsetWidth;
+            highlighter.style.width = `${width}px`;
+            highlighter.style.transform = `translateX(${left}px)`;
+            activeTab.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+
+        window.onload = () => {
+            const active = document.querySelector('.tab-btn.active');
+            updateHighlighter(active);
+            typeEffect(); // Start typing effect
+        };
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                updateHighlighter(tab);
+                const target = tab.getAttribute('data-target');
+                sections.forEach(sec => {
+                    sec.classList.remove('active-section');
+                    if(sec.id === target) sec.classList.add('active-section');
+                });
+            });
+        });
+
+        function switchTab(targetId) {
+            const targetBtn = document.querySelector(`[data-target="${targetId}"]`);
+            if(targetBtn) targetBtn.click();
+        }
+
+        // --- TYPING EFFECT LOGIC ---
+        const typingText = document.getElementById("typing-text");
+        const data = [
+            { text: "Graphic Design", color: "#ff0055" }, // Neon Pink
+            { text: "Video Editing",  color: "#00ddff" }, // Neon Cyan
+            { text: "Photography",    color: "#ffaa00" }  // Neon Orange/Gold
+        ];
+
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentItem = data[wordIndex];
+            
+            // Set Color as CSS Variable for the liquid gradient
+            typingText.style.setProperty('--target-color', currentItem.color);
+            
+            // Logic for typing vs deleting
+            if (isDeleting) {
+                typingText.textContent = currentItem.text.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                typingText.textContent = currentItem.text.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && charIndex === currentItem.text.length) {
+                typeSpeed = 2000; // Pause at end of word
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % data.length;
+                typeSpeed = 500; // Pause before new word
+            }
+
+            setTimeout(typeEffect, typeSpeed);
+        }
+
+        // --- VISUAL EFFECTS ---
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        const container = document.querySelector('.main-container');
+        document.addEventListener('mousemove', (e) => {
+            if(window.innerWidth > 768) {
+                const xAxis = (window.innerWidth / 2 - e.pageX) / 50; 
+                const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
+                container.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+            }
+        });
+    </script>
+</body>
+</html>
